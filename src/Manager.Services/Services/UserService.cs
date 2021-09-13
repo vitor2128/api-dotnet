@@ -40,7 +40,7 @@ namespace Manager.Services.Services
     {
       var userExists = await _userRepository.Get(userDTO.Id);
 
-      if (userExists != null)
+      if (userExists == null)
         throw new DomainException("Usuario não existe");
 
       var user = _mapper.Map<User>(userDTO);
