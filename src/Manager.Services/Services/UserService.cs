@@ -36,39 +36,59 @@ namespace Manager.Services.Services
       return _mapper.Map<UserDTO>(userCreated);
     }
 
-    public async Task<UserDTO> Get(long id)
+    public async Task<UserDTO> Update(UserDTO userDTO)
     {
-      throw new System.NotImplementedException();
-    }
+      var userExists = await _userRepository.Get(userDTO.Id);
 
-    public async Task<List<UserDTO>> Get()
-    {
-      throw new System.NotImplementedException();
-    }
+      if (userExists != null)
+        throw new DomainException("Usuario não existe");
 
-    public async Task<UserDTO> GetByEmail(string email)
-    {
-      throw new System.NotImplementedException();
+      var user = _mapper.Map<User>(userDTO);
+      user.Validate();
+
+      var userUpdate = await _userRepository.Update(user);
+
+      return _mapper.Map<UserDTO>(userUpdate);
     }
 
     public async Task Remove(long id)
     {
-      throw new System.NotImplementedException();
+      await _userRepository.Remove(id);
+    }
+
+    public async Task<UserDTO> Get(long id)
+    {
+      var user = await _userRepository.Get(id);
+
+      return _mapper.Map<UserDTO>(user);
+    }
+
+    public async Task<List<UserDTO>> Get()
+    {
+      var allUsers = await _userRepository.Get();
+
+      return _mapper.Map<List<UserDTO>>(allUsers);
+    }
+
+    public async Task<UserDTO> GetByEmail(string email)
+    {
+      var user = await _userRepository.GetByEmail(email);
+
+      return _mapper.Map<UserDTO>(user);
     }
 
     public async Task<List<UserDTO>> SearchByEmail(string email)
     {
-      throw new System.NotImplementedException();
+      var allUsers = await _userRepository.SearchByEmail(email);
+
+      return _mapper.Map<List<UserDTO>>(allUsers);
     }
 
     public async Task<List<UserDTO>> SearchByName(string name)
     {
-      throw new System.NotImplementedException();
-    }
+      var allUsers = await _userRepository.SearchByName(name);
 
-    public async Task<UserDTO> Update(UserDTO userDTO)
-    {
-      throw new System.NotImplementedException();
+      return _mapper.Map<List<UserDTO>>(allUsers);
     }
   }
 }
